@@ -27,12 +27,15 @@ const Login = () => {
         console.log(data);
 
         if (data.code == 200) {
+          console.log(data);
           navigate("/");
+
         } else if (data.code == 404) {
           authInfo.current.innerText = data.message;
+
         } else {
           authInfo.current.innerText = data.message;
-          console.log(err.message);
+          console.log(data.message);
         }
       })
       .catch((err) => {

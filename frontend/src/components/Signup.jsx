@@ -1,10 +1,12 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import '../stylesheets/Login.css';
 
 const Signup = () => {
-  const [email, setEnmail] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+
   const navigate = useNavigate();
   const authInfo = useRef();
 
@@ -13,26 +15,28 @@ const Signup = () => {
     console.log(name);
     console.log(password);
 
-    fetch(`${import.meta.env.VITA_API_URL}/adduser`, {
+    fetch(`${import.meta.env.VITE_API_URL}/adduser`, {
       method: "POST",
       headers: {
-        "content-Type": "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         email: email,
-        name: name,
         password: password,
+        name: name,
       }),
     })
-      .then((Response) => Response.json())
+      .then((response) => response.json())
       .then((data) => {
         console.log(data);
 
         if (data.code == 200) {
+          console.log(data);
           navigate("/");
+
         } else {
           authInfo.current.innerText = data.message;
-          console.log(err.message);
+          console.log(data.message);
         }
       })
       .catch((err) => {
@@ -41,44 +45,38 @@ const Signup = () => {
   };
 
   return (
-    <div>
-      <div className="Signup-main">
-        <h3 id="Signup-heading">Signup Here</h3>
+      <div className="auth-main">
+        <h3 id="auth-heading">Signup Here</h3>
         <input
           placeholder="Enter Your Email"
           type="email"
-          className="Signup-input"
-          onClick={(e) => {
-            setEnmail(e.target.value);
-          }}
-        />
-
-        <input
-          placeholder="Enter Your Name"
-          type="text"
-          className="Signup-input"
-          onClick={(e) => {
-            setName(e.target.value);
+          className="auth-input"
+          onChange={(e) => {
+            setEmail(e.target.value);
           }}
         />
 
         <input
           placeholder="Enter Your password"
           type="Password"
-          className="Signup-input"
-          onClick={(e) => {
+          className="auth-input"
+          onChange={(e) => {
             setPassword(e.target.value);
           }}
         />
 
-        <span id="auth-info" ref={authInfo}>
-          ...
-        </span>
-        <button id="signup-btn" onClick={handleSignUp}>
-          Sign Up
-        </button>
+        <input
+          placeholder="Enter Your Name"
+          type="text"
+          className="auth-input"
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
+        />
+
+        <span id="auth-info" ref={authInfo}> </span>
+        <button id="auth-btn" onClick={handleSignUp}> Sign Up </button>
       </div>
-    </div>
   );
 };
 
