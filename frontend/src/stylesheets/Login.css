@@ -41,3 +41,21 @@
   background-color:  rgb(30, 195, 15);
   scale: 0.98;
 }
+
+.auth-create{
+  font-size: 14px;
+  color: rgb(56, 56, 56);
+
+}
+
+.auth-create span{
+  color: rgb(10, 105, 194);
+  cursor: pointer;
+  margin-left: 5px;
+  
+}
+
+.auth-create span:hover{
+  text-decoration: underline;
+  color: rgb(9, 77, 139);
+}

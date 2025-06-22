@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import '../stylesheets/Login.css';
 
 const Signup = () => {
@@ -58,7 +58,16 @@ const Signup = () => {
 
         <input
           placeholder="Enter Your password"
-          type="Password"
+          type="password"
+          className="auth-input"
+          onChange={(e) => {
+            setPassword(e.target.value);
+          }}
+        />
+
+        <input
+          placeholder="Enter Confirm password"
+          type="password"
           className="auth-input"
           onChange={(e) => {
             setPassword(e.target.value);
@@ -76,6 +85,7 @@ const Signup = () => {
 
         <span id="auth-info" ref={authInfo}> </span>
         <button id="auth-btn" onClick={handleSignUp}> Sign Up </button>
+        <p className='auth-create'>Already have an Account? <Link to="/auth"><span>Login here</span></Link></p>
       </div>
   );
 };

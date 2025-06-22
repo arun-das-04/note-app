@@ -1,12 +1,15 @@
 import React, { useState, useRef } from "react";
 import "../stylesheets/Login.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { useDispatch } from 'react-redux'
+import { setUserid } from "../store/slices/userSlice";
 
 const Login = () => {
   const authInfo = useRef(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleAuthBtn = () => {
     console.log(email);
@@ -28,6 +31,13 @@ const Login = () => {
 
         if (data.code == 200) {
           console.log(data);
+          
+          dispatch(setUserid({
+              userid: data.userData._id,
+              userName: data.userData.name,
+              islogged: true
+            }));
+
           navigate("/");
 
         } else if (data.code == 404) {
@@ -70,6 +80,8 @@ const Login = () => {
         <button id="auth-btn" onClick={handleAuthBtn}>
           Submit
         </button>
+
+        <p className='auth-create'>Don't have an Account? <Link to="/auth/signup"><span>Create One</span></Link></p>
       </div>
     </div>
   );
