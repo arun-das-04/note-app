@@ -2,6 +2,10 @@ import { Router } from 'express';
 import mongoose from 'mongoose';
 import User from '../database/models/userModel.js';
 import Note from '../database/models/noteModel.js';
+import route2 from './routeSecond.js';
+import route3 from './routeThird.js';
+import route4 from './routeForth.js';
+
 
 const route = Router();
 
@@ -90,6 +94,16 @@ route.post('/createnote', async (req, res) => {
   } 
  });
 
+
+ // Other Routes
+ route.use('/', route2);
+ route.use('/', route3);
+ route.use('/', route4);
+
+
+ // Future Implementation ideas
+
+ 
  // Toest Implement
  // Update Email
  // Update Password
