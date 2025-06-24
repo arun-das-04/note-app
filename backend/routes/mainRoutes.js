@@ -65,7 +65,7 @@ route.post('/createnote', async (req, res) => {
   const newNote = new Note({title, content, userid});
   await newNote.save();
 
-  res.send({code: 200, message: 'Note added', userNote: newNote});
+  res.send({code: 200, message: 'Note successfully added', userNote: newNote});
 
   }
   catch (err) {
@@ -88,7 +88,23 @@ route.post('/createnote', async (req, res) => {
     res.send({code: 400, message: 'Note is failed to retrive due to server error', errMessage: err.message});
 
   } 
- })
+ });
+
+ // Toest Implement
+ // Update Email
+ // Update Password
+ // Email OTP varification
+ // Note Structure update for frotnend view
+ // Note view
+ // Edit Note
+ // Delete Note
+
+ // JWT implement 
+ // Cookies token implement
+
+ // Add Password for Note
+ 
+
 
 
 

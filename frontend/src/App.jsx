@@ -9,6 +9,8 @@ import Setting from './pages/Setting';
 import './App.css'
 import { Provider } from 'react-redux'
 import store from './store/store.js'
+import CreateNote from './components/CreateNote.jsx';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
 
@@ -47,14 +49,21 @@ function App() {
 
       ]
     },
+    {
+      path: '/create',
+      element: <CreateNote />
+    },
 
   ]);
 
   return (
     <Provider store={store}>
       <RouterProvider router={router}></RouterProvider>
+      <Toaster/>
     </Provider>
   )
 }
 
 export default App
+
+

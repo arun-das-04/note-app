@@ -3,6 +3,7 @@ import "../stylesheets/Login.css";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from 'react-redux'
 import { setUserid } from "../store/slices/userSlice";
+import toast from 'react-hot-toast';
 
 const Login = () => {
   const authInfo = useRef(null);
@@ -12,8 +13,8 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const handleAuthBtn = () => {
-    console.log(email);
-    console.log(password);
+    // console.log(email);
+    // console.log(password);
 
     fetch(`${import.meta.env.VITE_API_URL}/userlogin`, {
       method: "POST",
@@ -27,29 +28,34 @@ const Login = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
 
         if (data.code == 200) {
-          console.log(data);
+          // console.log(data);
           
           dispatch(setUserid({
               userid: data.userData._id,
               userName: data.userData.name,
               islogged: true
             }));
+          
+          toast.success('Login Successfull')
 
           navigate("/");
 
         } else if (data.code == 404) {
-          authInfo.current.innerText = data.message;
+          // authInfo.current.innerText = data.message;
+          toast.error(data.message);
 
         } else {
-          authInfo.current.innerText = data.message;
-          console.log(data.message);
+          // authInfo.current.innerText = data.message;
+          // console.log(data.message);
+          toast.error(data.message);
         }
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
+        toast.error(err)
       });
   };
 
@@ -88,3 +94,4 @@ const Login = () => {
 };
 
 export default Login;
+
