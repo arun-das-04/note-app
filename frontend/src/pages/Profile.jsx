@@ -2,6 +2,9 @@ import React from 'react';
 import Note from '../components/Note';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import '../stylesheets/Profile.css';
+import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const Profile = () => {
   const [notes, setNotes] = useState([]);
@@ -25,18 +28,20 @@ const Profile = () => {
 
       if(data.code==200){
 
-        console.log(data);
+        // console.log(data);
         setNotes(data.notes);
       }
 
       else{
-        console.log(`Something went wrong`, data);
+        // console.log(`Something went wrong`, data);
+        toast.err(data.message)
       }
 
 
     })
     .catch((err) => {
-      console.log(err);
+      // console.log(err);
+      toast.err(err.message);
     });
 
   }, []);
@@ -54,20 +59,31 @@ const Profile = () => {
     
     return (
       <>
-        <h2>Welcome {userName || 'loading..'}</h2>
+        <div className='profile-main'>
+          <div className='profile-top-container'>
+            <h2 className='profile-heading'>Welcome <span>{userName || 'loading..'}</span></h2>
+            <Link to='/create'><button id='profile-create-note'>+</button></Link>
+          </div>
         <p>No Notes are crated</p> 
+        </div>
     </>
     )
   }
   else{
     
     return (
-      <div>
-        <h2>Welcome {userName || 'loading..'}</h2>
+      <div className='profile-main'>
+        <div className='profile-top-container'>
+          <h2 className='profile-heading'>Welcome <span>{userName || 'loading..'}</span></h2>
+          <Link to='/create'><button id='profile-create-note'>+</button></Link>
+        </div>
 
-        {notes.map((note, index) => (
-          <Note key={index} title={note.title} content={note.content} />
-        ))}
+
+        <div className='profile-note-section'>
+          {notes.map((note, index) => (
+            <Note key={index} title={note.title} content={note.content} />
+          ))}
+        </div>
         
       </div>
     )

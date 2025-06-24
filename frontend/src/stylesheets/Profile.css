@@ -1,0 +1,39 @@
+.profile-main{
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+}
+
+.profile-top-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+
+.profile-heading{
+  font-size: 25px;
+}
+
+.profile-heading span{
+  color: rgb(18, 113, 190);
+
+}
+
+.profile-note-section{
+  display: flex;
+  flex-direction: column;
+}
+
+#profile-create-note{
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 0;
+  font-size: 30px;
+  background-color: rgb(51, 230, 81);
+  color: white;
+  cursor: pointer;
+
+}

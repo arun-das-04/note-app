@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import '../stylesheets/Login.css';
+import toast from "react-hot-toast";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -11,9 +12,9 @@ const Signup = () => {
   const authInfo = useRef();
 
   const handleSignUp = () => {
-    console.log(email);
-    console.log(name);
-    console.log(password);
+    // console.log(email);
+    // console.log(name);
+    // console.log(password);
 
     fetch(`${import.meta.env.VITE_API_URL}/adduser`, {
       method: "POST",
@@ -28,19 +29,22 @@ const Signup = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
 
         if (data.code == 200) {
-          console.log(data);
+          // console.log(data);
+          toast.success(data.message);
           navigate("/");
 
         } else {
-          authInfo.current.innerText = data.message;
-          console.log(data.message);
+          // authInfo.current.innerText = data.message;
+          // console.log(data.message);
+          toast.err(data.message);
         }
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
+        toast.err(err.message);
       });
   };
 
