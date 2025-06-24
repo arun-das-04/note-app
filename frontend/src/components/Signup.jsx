@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
 
   const navigate = useNavigate();
@@ -16,36 +17,65 @@ const Signup = () => {
     // console.log(name);
     // console.log(password);
 
-    fetch(`${import.meta.env.VITE_API_URL}/adduser`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-        name: name,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // console.log(data);
-
-        if (data.code == 200) {
-          // console.log(data);
-          toast.success(data.message);
-          navigate("/");
-
-        } else {
-          // authInfo.current.innerText = data.message;
-          // console.log(data.message);
-          toast.err(data.message);
-        }
+    if(email!='' && password!='' && confirmPassword!='' && name!='' && password===confirmPassword){
+      fetch(`${import.meta.env.VITE_API_URL}/adduser`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+          name: name,
+        }),
       })
-      .catch((err) => {
-        // console.log(err);
-        toast.err(err.message);
-      });
+        .then((response) => response.json())
+        .then((data) => {
+          // console.log(data);
+
+          if (data.code == 200) {
+            // console.log(data);
+            toast.success(data.message);
+            navigate("/auth");
+
+          } else {
+            // authInfo.current.innerText = data.message;
+            // console.log(data.message);
+            toast.err(data.message);
+          }
+        })
+        .catch((err) => {
+          // console.log(err);
+          toast.err(err.message);
+        });
+    }
+    else {
+      if(email==''){
+        toast('Please Provide a valid Email', {
+          icon: '⚠️',
+        });
+      }
+      else if(password==''){
+        toast('Please Provide a valid password', {
+          icon: '⚠️',
+        });
+      }
+      else if(confirmPassword==''){
+        toast('Please Provide same confirm password', {
+          icon: '⚠️',
+        });
+      }
+      else if(name==''){
+        toast('Please Provide a valid name', {
+          icon: '⚠️',
+        });
+      }
+      else if(password!=confirmPassword){
+        toast('Both Password Must be Same', {
+          icon: '⚠️',
+        });
+      }
+    }
   };
 
   return (
@@ -74,7 +104,7 @@ const Signup = () => {
           type="password"
           className="auth-input"
           onChange={(e) => {
-            setPassword(e.target.value);
+            setConfirmPassword(e.target.value);
           }}
         />
 
