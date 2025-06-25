@@ -11,6 +11,7 @@ import { Provider } from 'react-redux'
 import store from './store/store.js'
 import CreateNote from './components/CreateNote.jsx';
 import { Toaster } from 'react-hot-toast';
+import NoteView from './components/NoteView.jsx';
 
 function App() {
 
@@ -52,6 +53,10 @@ function App() {
     {
       path: '/create',
       element: <CreateNote />
+    },
+    {
+      path: '/viewnote',
+      element: <NoteView/>
     },
 
   ]);

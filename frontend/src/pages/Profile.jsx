@@ -5,12 +5,15 @@ import { useSelector } from 'react-redux';
 import '../stylesheets/Profile.css';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
   const [notes, setNotes] = useState([]);
   const userid = useSelector(store => store.user.userid);
   const userName = useSelector(store => store.user.userName);
   const islogged = useSelector(store => store.user.islogged);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
 
@@ -45,6 +48,8 @@ const Profile = () => {
     });
 
   }, []);
+
+  
     
 
   if(!islogged){
@@ -81,7 +86,10 @@ const Profile = () => {
 
         <div className='profile-note-section'>
           {notes.map((note, index) => (
-            <Note key={index} title={note.title} content={note.content} />
+            <Note 
+              key={index} 
+              note={note} 
+              />
           ))}
         </div>
         
