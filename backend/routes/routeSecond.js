@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import User from '../database/models/userModel.js';
 import Note from '../database/models/noteModel.js';
+import sendOTP from '../modules/nodeMailer.js';
 
 const route = Router();
 
@@ -42,6 +43,71 @@ route.patch('/editnote', async (req, res) => {
     
   }
 });
+
+
+
+// OTP varification
+let OtpStore = {};
+
+// Request/Send OTP
+route.post('/requestotp', (req, res) => {
+  try{
+    const {email} = req.body;
+    const OTP = sendOTP(process.env.nodeMailerUser, process.env.nodeMailerPass, email);
+
+    if(OTP){
+      OtpStore = {email: email, OTP: OTP}
+      res.send({code: 200, message: 'OTP sent Successfully'});
+    }
+    else{
+      res.send({code: 404, message: 'OTP Failed to Sent'})
+    }
+    
+  }
+  catch(err){
+    res.send({code: 400, message: 'OTP failed due to server error', errMessage: err.message});
+  }
+});
+
+// Varify OTP
+route.post('/varifyotp', (req, res) => {
+  try{
+    const {OTP, email} = req.body;
+    
+    if(OtpStore.email == email && OtpStore.OTP == OTP){
+      res.send({code: 200, message: 'OTP Matched'});
+    }
+    else{
+      res.send({code: 404, message: 'Invalid OTP'});
+    }
+  }
+  catch(err){
+    res.send({code: 400, message: 'Something went wrong!'});
+  }
+
+});
+
+
+// Search email availibility
+route.post('/varifyemail', async (req, res) => {
+
+  try{
+    const {email} = req.body;
+
+    const searchEmail = await User.findOne({email: email});
+    if(!searchEmail){
+      res.send({code: 200, message: 'Email is Available to use'});
+    }
+    else{
+      res.send({code: 404, message: 'Email already in use'});
+    }
+  }
+  catch(err){
+    res.send({code: 400, message: 'Email failed to Search due to server error', errMessage: err.message});
+  }
+
+});
+
 
 
 export default route;

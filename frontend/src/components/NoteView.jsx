@@ -72,11 +72,13 @@ const NoteView = () => {
           toast.success(data.message);
           setisedit(false);
 
+          const presentTime = new Date();
+
           dispatch(setNote({
             noteid: noteid,
             noteTitle: newTitle,
             noteContent: newContent,
-            noteTime: noteTime,
+            noteTime: presentTime,
             isNoteOpened: true,
           }));
 
