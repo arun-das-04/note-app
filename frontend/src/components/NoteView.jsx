@@ -1,118 +1,105 @@
-import React from 'react';
 import '../stylesheets/NoteView.css';
+import { useNavigate } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { setNote, exitNote } from '../store/slices/noteSlice.js';
+import editNoteHook from '../hooks/editNoteHook';
+
 import { IoIosArrowBack } from "react-icons/io";
 import { FaSave } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
-import { useNavigate } from 'react-router-dom';
-import { setNote } from '../store/slices/noteSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { exitNote } from '../store/slices/noteSlice';
-import { useState, useRef, useEffect } from 'react';
-import toast from 'react-hot-toast';
+
+
 
 const NoteView = () => {
 
+  // Objects
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
 
+  // Note Store items
   const noteid = useSelector(state => state.note.noteid);
   const noteTitle = useSelector(state => state.note.noteTitle);
   const noteContent = useSelector(state => state.note.noteContent);
   const noteTime = useSelector(state => state.note.noteTime);
   const isNoteOpened = useSelector(state => state.note.isNoteOpened);
 
+  // States
   const [newTitle, setNewTitle] = useState(noteTitle);
   const [newContent, setNewContent] = useState(noteContent);
   const [isedit, setisedit] = useState(false);
 
+  // Refs
   const editTitle = useRef(null);
   const editContent = useRef(null);
   const editBtn = useRef(null);
   const editTextArea = useRef(null);
 
+  // Hook functions
+  const editNote = editNoteHook();
 
+
+  // Date methods
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const fullTime = new Date(noteTime);
-
-  const months = ["January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"];
   const year = fullTime.getFullYear();
   const month = fullTime.getMonth();
   const date = fullTime.getDate();
 
+  // Back Button Click
   const handleBackBtn = () => {
-    navigate(-1);
     dispatch(exitNote());
-
+    navigate(-1);
   }
 
-  const handleEditBtn = () => {
+  // Edit button Click
+  const handleEditBtn = async () => {
+
+    // setting to edit mode from view mode
     if(!isedit){
       setisedit(true);
       setNewTitle(noteTitle);
       setNewContent(noteContent);
     }
 
+    // saving edited note and back to view mode
     else{
-      fetch(`${import.meta.env.VITE_API_URL}/editnote`,{
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          noteid: noteid,
-          newTitle: newTitle, 
-          newContent: newContent
-        }),
-      })
-      .then(response => response.json())
-      .then((data) => {
-        console.log(data);
-        if(data.code == 200){
-          toast.success(data.message);
-          setisedit(false);
-
-          const presentTime = new Date();
-
-          dispatch(setNote({
+      try{
+        await editNote(noteid, newTitle, newContent);
+        const presentTime = Date.now();
+        dispatch(setNote({
             noteid: noteid,
             noteTitle: newTitle,
             noteContent: newContent,
             noteTime: presentTime,
             isNoteOpened: true,
           }));
-
-        }
-        else{
-          toast.error('Something Went Wrong');
-        }
-      })
-      .catch((err) => {
-        toast.error(err.message);
-      });
-
-      
-    }
-
+      } catch (_) { }
   }
+}
 
-  const resizeTextarea = () => {
-      const textarea = editTextArea.current;
-      if (textarea) {
-        textarea.style.height = 'auto'; // Reset height to shrink if needed
-        const newHeight = Math.min(Math.max(textarea.scrollHeight, 100), 800);
-        textarea.style.height = `${newHeight}px`;
-      }
-    };
+// Resize area based on lines in content
+const resizeTextarea = () => {
+  const textarea = editTextArea.current;
+  if (textarea) {
+    textarea.style.height = 'auto'; // Reset height to shrink if needed
+    const newHeight = Math.min(Math.max(textarea.scrollHeight, 100), 800);
+    textarea.style.height = `${newHeight}px`;
+  }
+};
   
-    useEffect(() => {
-      resizeTextarea();
-    }, [newContent]);
+
+// run resize method on content change
+useEffect(() => {
+  resizeTextarea();
+}, [newContent]);
 
 
-  if(isNoteOpened){
-    return (
 
+if(isNoteOpened){
+  return (
       <div className='viewnote-main'>
         <div className='viewnote-top-buttons'>
           <button id='viewnote-back-btn' onClick={handleBackBtn}><IoIosArrowBack/></button>
@@ -126,49 +113,53 @@ const NoteView = () => {
         
         <div className='viewnote-data'>
           <p id='viewnote-time'>{date} {months[month]},  {year}</p>
-          {!isedit?
+
+          { !isedit?
+            // Title for View Mode
             <p
-            ref={editTitle}
-            id='viewnote-title'>
+              ref={editTitle}
+              id='viewnote-title'>
               {noteTitle}
             </p>
+
             :
+
+            // Title for Edit Mode
             <input 
               id='viewnote-title' 
               defaultValue={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
-              >
-              
-            </input>
+            />
           }
           
-
-          {!isedit?
+          { !isedit?
+            // Content for View Mode
             <p 
-            ref={editContent}
-            id='viewnote-content'>
-                {noteContent}
-          </p>
-          :
-          <textarea 
-            id='viewnote-content' 
-            defaultValue={newContent}
-            ref={editTextArea}
-            onChange={(e) => setNewContent(e.target.value)}
+              ref={editContent}
+              id='viewnote-content'>
+                  {noteContent}
+            </p>
+
+            :
+
+            // Content for Edit Mode
+            <textarea 
+              id='viewnote-content' 
+              defaultValue={newContent}
+              ref={editTextArea}
+              onChange={(e) => setNewContent(e.target.value)}
             />
           }
           
         </div>
-
       </div>
     );
   }
 
-  else{
-    return(
-      <p>No notes is selected</p>
-    );
-  }
+  // If no note is selected
+  return(
+    <p>No notes is selected</p>
+  );
 }
 
-export default NoteView
+export default NoteView;

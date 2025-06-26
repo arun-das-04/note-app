@@ -6,4 +6,5 @@
   outline: 0;
   box-sizing: border-box;
   font-family: 'Open Sans', sans-serif, Arial, Helvetica;
+  transition: 200ms all ease-in-out;
 }

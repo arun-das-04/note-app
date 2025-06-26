@@ -21,11 +21,11 @@ export const noteSlice = createSlice({
     },
 
     exitNote: state => {
-      noteid = null;
-      noteTitle =  null;
-      noteContent =  null;
-      noteTime =  null;
-      isNoteOpened =  false;
+      state.noteid = null;
+      state.noteTitle =  null;
+      state.noteContent =  null;
+      state.noteTime =  null;
+      state.isNoteOpened =  false;
     },
   }
 })
