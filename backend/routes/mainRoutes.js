@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import mongoose from 'mongoose';
 import User from '../database/models/userModel.js';
 import Note from '../database/models/noteModel.js';
 import route2 from './routeSecond.js';
@@ -11,39 +10,39 @@ const route = Router();
 
 // Default path
 route.get('/', (req, res) => {
-  res.send('Welcome to my server');
+  res.send('Welcome to my server for Note App');
 });
 
 
-// Adding a New User
+// Adding a New User / Signup
 route.post('/adduser', async (req, res) => {
   try{
     const {email, password, name} = req.body;
-    const newUser = new User({email, password, name});
-    await newUser.save();
-
-    res.send({code: 200, message: 'User is added', userData: newUser});
-
+    if(email!='' && password!='' && name!=''){
+      const newUser = new User({email, password, name});
+      await newUser.save();
+      res.send({code: 200, message: 'User is added', userData: newUser});
+    }
+    else{
+      res.send({code: 400, message: 'Data is invalid'});
+    }
 
   } catch(err){
-    res.send({code: 400, message: 'User is failed to add', errMessage: err.message});
-    // console.log(err.message);
+    res.send({code: 500, message: 'Internal Server Error', errMessage: err.message});
   }
 });
 
 
-// Login
+// Login / Auth
 route.post('/userlogin', async (req, res) => {
   try{
     const {email, password} = req.body;
-
     const findEmail = await User.findOne({email: email});
 
-    if(findEmail){
+    if(findEmail) {
       const findUser = await User.findOne({email: email, password: password});
-
-      if(findUser){
-        res.send({code: 200, message: 'User Authentication passed', userData: findUser});
+      if(findUser) {
+        res.send({code: 200, message: 'User Authentication passed'});
       }
       else{
         res.send({code: 404, message: 'Wrong Password'});
@@ -52,28 +51,30 @@ route.post('/userlogin', async (req, res) => {
     else{
       res.send({code: 404, message: 'Email does not found'});
     }
-
   }
   catch (err){
-    res.send({code: 400, message: 'Login failed due to server error', errMessage: err.message});
+    res.send({code: 500, message: 'Internal Server Error', errMessage: err.message});
   }
-})
-
+});
 
 
 
 // Adding a new Note
 route.post('/createnote', async (req, res) => {
   try{
-  const {title, content, userid} = req.body;
-  const newNote = new Note({title, content, userid});
-  await newNote.save();
+    const {title, content, userid} = req.body;
 
-  res.send({code: 200, message: 'Note successfully added', userNote: newNote});
-
+    if(userid){
+      const newNote = new Note({title, content, userid});
+      await newNote.save();
+      res.send({code: 200, message: 'Note successfully added', userNote: newNote});
+    }
+    else{
+      res.send({code: 400, message: 'Data is invalid'});
+    }
   }
   catch (err) {
-    res.send({code: 400, message: 'Failed to Add note', errMessage: err.message});
+    res.send({code: 500, message: 'Internal Server Error', errMessage: err.message});
     // console.log(err.message);
   }
   
@@ -84,12 +85,18 @@ route.post('/createnote', async (req, res) => {
  route.post('/getnote', async (req, res) => {
   try{
     const {userid} = req.body;
-    const notes = await Note.find({userid: userid})
-    res.send({code: 200, message: 'Note Retrived', notes: notes});
+
+    if(userid){
+      const notes = await Note.find({userid: userid})
+      res.send({code: 200, message: 'Note Retrived', notes: notes});
+    }
+    else{
+      res.send({code: 400, message: 'Data is invalid'});
+    }
 
   }
   catch(err){
-    res.send({code: 400, message: 'Note is failed to retrive due to server error', errMessage: err.message});
+    res.send({code: 500, message: 'Internal Server Error', errMessage: err.message});
 
   } 
  });
