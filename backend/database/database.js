@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const connectDB = () => {
 
-  mongoose.connect(`mongodb+srv://arun04:Arundas123@projects.nta8xc0.mongodb.net/?retryWrites=true&w=majority&appName=Projects`, {
+  mongoose.connect(process.env.MongoURI, {
     dbname: 'note-app'
   })
   .then(() => {
