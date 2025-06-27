@@ -29,7 +29,6 @@ const CreateNote = () => {
     }
   };
 
-
   // runs resize methods on content change
   useEffect(() => {
     resizeTextarea();
@@ -40,13 +39,14 @@ const CreateNote = () => {
   const saveBtnHandler = async () => {
 
     if(userid && title!='' || content!='') {
-      try{
-        await createNote(title, content, userid);
-        navigate(-1);
-      } catch (_) { }
+        const data = await createNote(title, content, userid);
+        if(data.ok){
+          navigate(-1);
+        }
     }
     else{
-      toast.error("Data is missing");
+      if(!userid) { toast.error("Failed to get User, plese Login again") }
+      else if(!title || !content) { toast.error("Can't save empty data") }
     }
 
   }

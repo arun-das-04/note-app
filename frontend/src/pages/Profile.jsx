@@ -21,16 +21,13 @@ const Profile = () => {
   
   // By default fetch all Notes
   useEffect(() => {
-    try{
       const fetchAllNote = async () => {
         if(userid && islogged){
-          const {res, data} = await getNotes(userid);
+          const data = await getNotes(userid);
           setNotes(data.notes);
         }
       }
       fetchAllNote();
-    } catch (_) { }
-
   }, []);
     
 

@@ -31,14 +31,17 @@ const Signup = () => {
   const handleSignUp = async () => {
     
     if(email && password && confirmPassword && name && password === confirmPassword){
-      try{
-        await checkEmail(email);
-        setIsOtp(true);
-        await sendOtp(email);
 
-      } catch (_) {
-        setIsOtp(false);
-      }
+        const data = await checkEmail(email);
+        if(data.ok){
+          setIsOtp(true);
+
+          const data = await sendOtp(email);
+          if(!data.ok){
+             setIsOtp(false);
+          }
+
+        }
     }
     else{
       if(!email) { toast.error("Provide a valid Email") }
@@ -52,13 +55,15 @@ const Signup = () => {
   const handleOtpBtn = async () => {
 
     if(otp) {
-      try{
-        await varifyOtp(otp, email);
-        await addUser(email, password, name);
-        setIsOtp(false);
-        navigate('/auth');
+        const data = await varifyOtp(otp, email);
+        if(data.ok){
+          const data = await addUser(email, password, name);
 
-      } catch (_) {  }
+          if(data.ok){
+            setIsOtp(false);
+            navigate('/auth');
+          }
+        }  
     }
     else {
       toast.error("Enter your OTP");
