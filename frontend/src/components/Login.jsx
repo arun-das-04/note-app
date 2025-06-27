@@ -23,19 +23,19 @@ const Login = () => {
   const handleAuthBtn = async () => {
 
     if(email && password) {
-      try{
-        const {res, data } = await userLogin( email, password );
-        dispatch(setUser({
-          userid: data.userData._id,
-          userName: data.userData.name,
-          islogged: true,
-        }));
+        const data = await userLogin( email, password );
+        
+        if(data.ok){
+          dispatch(setUser({
+            userid: data.userData._id,
+            userName: data.userData.name,
+            islogged: true,
+          }));
 
-        setTimeout(() => {
-          navigate('/profile');
-        }, 1000)
-
-      } catch (_){ }
+          setTimeout(() => {
+            navigate('/profile');
+          }, 1000)
+        }
     }
     else {
       if(!email) { toast.error("Enter an email") }

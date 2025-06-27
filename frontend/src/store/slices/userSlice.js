@@ -14,12 +14,16 @@ export const userSlice = createSlice({
       state.userid = action.payload.userid;
       state.userName = action.payload.userName;
       state.islogged = action.payload.islogged;
+
+      localStorage.setItem('user', JSON.stringify(state));
     },
 
     logoutUser: state => {
       state.userid = null;
       state.userName = null;
       state.islogged = false;
+
+      localStorage.removeItem('user');
     },
   }
 })

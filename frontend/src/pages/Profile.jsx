@@ -21,17 +21,14 @@ const Profile = () => {
   
   // By default fetch all Notes
   useEffect(() => {
-    try{
       const fetchAllNote = async () => {
         if(userid && islogged){
-          const {res, data} = await getNotes(userid);
+          const data = await getNotes(userid);
           setNotes(data.notes);
         }
       }
       fetchAllNote();
-    } catch (_) { }
-
-  }, []);
+  }, [userid]);
     
 
   // if user is not logged
@@ -54,10 +51,10 @@ const Profile = () => {
         </div>
 
         <div className='profile-note-section'>
-          {notes.length<1?
+          {notes?.length<1?
             <p>No Notes are crated</p> 
             :
-            notes.map((note, index) => (
+            notes?.map((note, index) => (
               <Note 
                 key={index} 
                 note={note} 

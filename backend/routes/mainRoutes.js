@@ -20,12 +20,12 @@ route.post('/adduser', async (req, res) => {
     const {email, password, name} = req.body;
 
     if(!email || !password || !name){
-      return res.status(400).json({ message: 'All fields are required'})
+      return res.status(400).json({ ok: false, message: 'All fields are required'})
     }
 
     const findEmail = await User.findOne({ email });
     if(findEmail) {
-      return res.status(409).json({ message: 'Email already exists'})
+      return res.status(409).json({ ok: false, message: 'Email already exists'})
     }
 
     const newUser = new User({email, password, name});
@@ -33,12 +33,14 @@ route.post('/adduser', async (req, res) => {
 
     const { _id } = newUser;
     res.status(200).json({ 
+      ok: true,
       message: 'Account created successfully', 
       userData: {_id, name, email} 
     });
 
   } catch (err) {
     res.status(500).json({
+      ok: false,
       message: 'Internal Server Error', 
       errMessage: err.message
     });
@@ -52,27 +54,29 @@ route.post('/userlogin', async (req, res) => {
     const { email, password } = req.body;
 
     if(!email || !password) {
-      return res.status(400).json({ message: 'Email and Password are required'});
+      return res.status(400).json({ ok: false, message: 'Email and Password are required'});
     }
 
     const user = await User.findOne({ email });
 
     if(!user) {
-      return res.status(404).json({message: 'Email not found'});
+      return res.status(404).json({ok: false, message: 'Email not found'});
     }
 
     if(user.password !== password) {
-      return res.status(401).json({ message: 'Wrong Password'});
+      return res.status(401).json({ ok: false, message: 'Wrong Password'});
     }
 
     const {_id, name } = user;
     res.status(200).json({
+      ok: true,
       message: 'Login Successful',
       userData: { _id, name, email }
     });
      
   } catch (err) {
     res.status(500).json({
+      ok: false,
       message: 'Internal Server Error',
       errMessage: err.message
     });
@@ -87,20 +91,22 @@ route.post('/createnote', async (req, res) => {
     const {title, content, userid} = req.body;
 
     if(!userid) {
-      return res.status(400).json({ message: 'User ID required to create note'});
+      return res.status(400).json({ ok: false, message: 'User ID required to create note'});
     }
 
     const newNote = new Note({title, content, userid});
     await newNote.save();
 
-    const { _id, createdAt } = newNote;
+    const { _id, createdAt, updatedAt } = newNote;
     res.status(200).json({
-      message: 'Note successfully added', 
-      userNote: {_id, title, content, createdAt}
+      ok: true,
+      message: 'Note is saved', 
+      userNote: {_id, title, content, createdAt, updatedAt}
     });
 
   } catch (err) {
     res.status(500).json({
+      ok: false,
       message: 'Internal Server Error', 
       errMessage: err.message
     });
@@ -114,18 +120,20 @@ route.post('/createnote', async (req, res) => {
     const {userid} = req.body;
 
     if(!userid) {
-      return res.status(404).json({ message: 'User ID is required'});
+      return res.status(404).json({ ok: false, message: 'User ID is required'});
     }
 
-    const notes = await Note.find({userid: userid});
+    const notes = await Note.find({userid: userid}).sort({updatedAt:-1});
 
     res.status(200).json({
+      ok: true,
       message: 'All notes are fetched',
       notes: notes
     });
 
   } catch (err) {
     res.status(500).json({
+      ok: false,
       message: 'Internal Server Error', 
       errMessage: err.message
     });
