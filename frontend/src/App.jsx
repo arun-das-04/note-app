@@ -2,6 +2,9 @@ import './App.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux'
 import { Toaster } from 'react-hot-toast';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { setUser } from './store/slices/userSlice.js';
 
 import Home from './pages/Home';
 import Profile from './pages/Profile';
@@ -63,12 +66,22 @@ function App() {
 
   ]);
 
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const localUser = JSON.parse(localStorage.getItem('user'));
+    if (localUser?.userid) {
+      dispatch(setUser(localUser));
+    }
+  }, []);
+
+
+
   return (
-    <Provider store={store}>
+    <>
       <RouterProvider router={router}></RouterProvider>
       <Toaster position="bottom-center"/>
-    </Provider>
-  )
+    </>
+  );
 }
 
 export default App

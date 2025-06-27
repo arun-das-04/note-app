@@ -28,7 +28,7 @@ const Profile = () => {
         }
       }
       fetchAllNote();
-  }, []);
+  }, [userid]);
     
 
   // if user is not logged
@@ -51,10 +51,10 @@ const Profile = () => {
         </div>
 
         <div className='profile-note-section'>
-          {notes.length<1?
+          {notes?.length<1?
             <p>No Notes are crated</p> 
             :
-            notes.map((note, index) => (
+            notes?.map((note, index) => (
               <Note 
                 key={index} 
                 note={note} 
