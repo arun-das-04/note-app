@@ -1,18 +1,17 @@
-import React from 'react'
 import '../stylesheets/Note.css';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch} from 'react-redux';
-import { setNote } from '../store/slices/noteSlice';
+import { setNote } from '../store/slices/noteSlice.js';
 
 const Note = (props) => {
+  
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const note = props.note;
 
-
+  // If user click on a particular note
   const handleNoteClick = () => {
-    navigate('/viewnote');
 
     dispatch(setNote({
       noteid: note._id,
@@ -22,7 +21,7 @@ const Note = (props) => {
       isNoteOpened: true,
     }));
 
-
+    navigate('/viewnote');
   }
 
 

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-export const connectDB = () => {
+const connectDB = () => {
 
   mongoose.connect(process.env.MongoURI, {
     dbname: 'note-app'
@@ -10,7 +10,9 @@ export const connectDB = () => {
 
   })
   .catch((err) => {
-    console.log(`Error in database connection`+err);
+    console.log(`Error in database connection: `+ err);
 
   });
 }
+
+export default connectDB;

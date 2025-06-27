@@ -1,30 +1,29 @@
 import nodemailer from "nodemailer";
 
-const sendOTP = (userEmail, userPass, email) => {
+
+
+const sendOTP = async (email) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: userEmail,
-      pass: userPass,
+      user: process.env.nodeMailerUser,
+      pass: process.env.nodeMailerPass,
     },
   });
 
   const OTP = Math.floor(100000 + Math.random() * 900000);
 
-  (async () => {
-    const info = await transporter.sendMail({
-      from: '"Note-app" <arundas.bca@gmail.com>',
-      to: email,
-      subject: "OTP for Note App",
-      text: `Your One Time Password for email varification is: ${OTP}`, // plain‑text body
-      // html: "<b>Hello world?</b>", // HTML body
-    });
+  const info = await transporter.sendMail({
+    from: '"Note-app" <arundas.bca@gmail.com>',
+    to: email,
+    subject: "OTP for Note App",
+    text: `Your One Time Password for email varification is: ${OTP}`, // plain‑text body
+    // html: "<b>Hello world?</b>", // HTML body
+  });
 
-  })();
+  return {OTP, info}
 
  
-  return OTP;
-
 }
 
 export default sendOTP;

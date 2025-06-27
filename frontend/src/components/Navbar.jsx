@@ -1,24 +1,37 @@
-import React from 'react';
-import { Outlet, Link, useNavigate } from 'react-router-dom';
 import '../stylesheets/Navbar.css';
+import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { logoutUser } from '../store/slices/userSlice';
+import { logoutUser } from '../store/slices/userSlice.js';
+
+import toast from 'react-hot-toast';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const islogged = useSelector(state => state.user.islogged);
 
+  // Handle Login/Logout button
   const handelNavBtn = () => {
-    if(islogged){
-      dispatch(logoutUser());
-      console.log(`User is logged out`);
 
+    if(islogged){
+      toast.promise(
+        new Promise((resolve) => {
+          setTimeout(() => {
+            dispatch(logoutUser());
+            resolve();
+          }, 1000);
+        }),
+          {
+            loading: "Logging out...",
+            success: "User is logged out",
+            error: "Logged Out is failed",
+          }
+      )
     }
-    else{
-      navigate('/auth');
-    }
+    navigate('/auth')
   }
+  
 
   return (
     <>

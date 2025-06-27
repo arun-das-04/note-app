@@ -1,5 +1,5 @@
 // Functions import
-import { connectDB } from './database/database.js';
+import connectDB from './database/database.js';
 import route from './routes/mainRoutes.js';
 
 // Module import

@@ -1,78 +1,47 @@
-import React, { useState, useRef } from "react";
 import "../stylesheets/Login.css";
+import { useState} from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useDispatch } from 'react-redux'
-import { setUserid } from "../store/slices/userSlice";
-import toast from 'react-hot-toast';
+import { useDispatch } from "react-redux";
+
+import { setUser } from "../store/slices/userSlice.js";
+import userLoginHook from "../hooks/userLoginHook";
+import toast from "react-hot-toast";
+
 
 const Login = () => {
-  const authInfo = useRef(null);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleAuthBtn = () => {
-    // console.log(email);
-    // console.log(password);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-    if(email!= '' && password != ''){
-      fetch(`${import.meta.env.VITE_API_URL}/userlogin`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          // console.log(data);
-          
-          if (data.code == 200) {
-            // console.log(data);
-            
-            dispatch(setUserid({
-                userid: data.userData._id,
-                userName: data.userData.name,
-                islogged: true
-              }));
-            
-            toast.success('Login Successfull')
+  const userLogin = userLoginHook();
 
-            navigate("/profile");
 
-          } else if (data.code == 404) {
-            // authInfo.current.innerText = data.message;
-            toast.error(data.message);
+  // handle Login Btn Click
+  const handleAuthBtn = async () => {
 
-          } else {
-            // authInfo.current.innerText = data.message;
-            // console.log(data.message);
-            toast.error(data.message);
-          }
-        })
-        .catch((err) => {
-          // console.log(err);
-          toast.error(err)
-        });
+    if(email && password) {
+      try{
+        const {res, data } = await userLogin( email, password );
+        dispatch(setUser({
+          userid: data.userData._id,
+          userName: data.userData.name,
+          islogged: true,
+        }));
+
+        setTimeout(() => {
+          navigate('/profile');
+        }, 1000)
+
+      } catch (_){ }
     }
-    else{
-      if(email==''){
-        toast('Please Provide a valid Email', {
-          icon: '⚠️',
-        });
-      }
-      else if(password==''){
-        toast('Please provide a valid Password', {
-          icon: '⚠️',
-        });
-      }
-
+    else {
+      if(!email) { toast.error("Enter an email") }
+      else if(!password) { toast.error("Enter your Password") }
     }
-  };
+  }
 
 
   return (
@@ -84,26 +53,23 @@ const Login = () => {
           placeholder="Enter your email"
           type="email"
           className="auth-input"
-          onChange={(e) => {
-            setEmail(e.target.value);
-          }}
-        ></input>
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
         <input
           placeholder="Enter your password"
           type="password"
           className="auth-input"
-          onChange={(e) => {
-            setPassword(e.target.value);
-          }}
-        ></input>
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-        <span id="auth-info" ref={authInfo}></span>
         <button id="auth-btn" onClick={handleAuthBtn}>
           Submit
         </button>
 
-        <p className='auth-create'>Don't have an Account? <Link to="/auth/signup"><span>Create One</span></Link></p>
+        <p className='auth-create'>Don't have an Account? 
+          <Link to="/auth/signup"><span>Create One</span></Link>
+        </p>
       </div>
     </div>
   );

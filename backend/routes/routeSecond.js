@@ -6,66 +6,94 @@ import sendOTP from '../modules/nodeMailer.js';
 const route = Router();
 
 
+// Edit Email Feature
 route.patch('/editemail', async (req, res) => {
   try{
-    const {email, newEmail} = req.body;
-    const updateEmail = await User.findOneAndUpdate({email: email}, {$set:{email: newEmail}});
-    if(updateEmail){
-      res.send({code: 200, message: 'Email Successfully Updated', result: {oldEmail: updateEmail.email, newEmail: newEmail, id: updateEmail._id}});
+    const { userid , newEmail } = req.body;
+
+    if( !userid || !newEmail ) {
+      return res.status(404).json({ message: 'Data is missing'});
     }
-    else{
-      res.send({code: 404, message: 'Email Failed to Update'});
+    
+    const updateEmail = await User.findOneAndUpdate({_id: userid}, {$set:{email: newEmail}});
+
+    if( !updateEmail ) {
+      return res.status(400).json({ message: 'Email failed to update'});
     }
-  }
-  catch(err){
-    res.send({code: 400, message: 'Email failed to Update due to Server Error', errMessage: err.message});
+
+    res.status(200).json({
+      message: 'Email Successfully Updated', 
+      result: { oldEmail: updateEmail.email, newEmail: newEmail, _id: userid }
+    });
+
+  } catch(err) {
+    res.status(500).json({
+      message: 'Internal Server Error', 
+      errMessage: err.message
+    });
   }
 });
 
 
-
+// Edit Note Feature
 route.patch('/editnote', async (req, res) => {
   try{
     const {noteid, newTitle, newContent} = req.body;
-    console.log(req.body);
-    
-    const updateNote = await Note.findOneAndUpdate({_id: noteid}, {$set:{title: newTitle, content: newContent}});
-    if(updateNote){
-      res.send({code: 200, message: 'Note is updated'});
-    }
-    else{
-      res.send({code: 404, mesage: 'Note is failed to Update'});
+
+    if( !noteid ) {
+      return res.status(404).json({ message: 'Note ID is required' });
     }
 
-  }
-  catch(err){
-    res.send({code: 400, message: 'Internal Server Error', errMessage: err.message});
-    
+    const updateNote = await Note.findOneAndUpdate({_id: noteid}, {$set:{title: newTitle, content: newContent}});
+
+    if(!updateNote){
+      return res.status(400).json({ messsage: 'Note is failed to update' });
+    }
+
+    res.status(200).json({
+      message: 'Note is updated',
+      noteid: noteid
+    });
+
+  } catch(err) {
+    res.status(500).json({
+      message: 'Internal Server Error', 
+      errMessage: err.message
+    });
   }
 });
-
 
 
 // OTP varification
 let OtpStore = {};
 
 // Request/Send OTP
-route.post('/requestotp', (req, res) => {
+route.post('/requestotp', async (req, res) => {
   try{
     const {email} = req.body;
-    const OTP = sendOTP(process.env.nodeMailerUser, process.env.nodeMailerPass, email);
 
-    if(OTP){
-      OtpStore = {email: email, OTP: OTP}
-      res.send({code: 200, message: 'OTP sent Successfully'});
+    if( !email ) {
+      return res.status(404).json({ message: 'Email is required to sent OTP'});
     }
-    else{
-      res.send({code: 404, message: 'OTP Failed to Sent'})
+
+    const {OTP, info} = await sendOTP( email );
+
+    if( !OTP || !info.messageId ) {
+      return res.status(400).json({ message: 'Failed to Sent OTP'});
     }
-    
-  }
-  catch(err){
-    res.send({code: 400, message: 'OTP failed due to server error', errMessage: err.message});
+
+    OtpStore[email] = OTP;
+
+    res.status(200).json({
+      message: 'OTP sent Successfully',
+      email: email
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      message: 'Internal server error', 
+      errMessage: err.message
+    });
   }
 });
 
@@ -73,39 +101,55 @@ route.post('/requestotp', (req, res) => {
 route.post('/varifyotp', (req, res) => {
   try{
     const {OTP, email} = req.body;
-    
-    if(OtpStore.email == email && OtpStore.OTP == OTP){
-      res.send({code: 200, message: 'OTP Matched'});
-    }
-    else{
-      res.send({code: 404, message: 'Invalid OTP'});
-    }
-  }
-  catch(err){
-    res.send({code: 400, message: 'Something went wrong!'});
-  }
 
+    if( !OTP || !email ) {
+      return res.status(404).json({ message: 'Data is missing' });
+    }
+    
+    if( OtpStore[email] !== Number(OTP) ) {
+      return res.status(400).json({ message: 'Invalid OTP'});
+    }
+
+    res.status(200).json({
+      message: 'OTP Matched',
+      email: email
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      message: 'Internal Server Error', 
+      errMessage: err.message
+    });
+  }
 });
 
 
 // Search email availibility
-route.post('/varifyemail', async (req, res) => {
-
+route.post('/checkemail', async (req, res) => {
   try{
     const {email} = req.body;
 
-    const searchEmail = await User.findOne({email: email});
-    if(!searchEmail){
-      res.send({code: 200, message: 'Email is Available to use'});
+    if( !email ) {
+      return res.status(404).json({ message: 'Email is required'});
     }
-    else{
-      res.send({code: 404, message: 'Email already in use'});
-    }
-  }
-  catch(err){
-    res.send({code: 400, message: 'Email failed to Search due to server error', errMessage: err.message});
-  }
 
+    const searchEmail = await User.findOne({email: email});
+    
+    if(searchEmail){
+      return res.status(400).json({ message: 'Email already in use'});
+    }
+
+    res.status(200).json({
+      message: 'Email is Available to use',
+      email: email
+    });
+
+  } catch(err) {
+    res.status(500).json({
+      message: 'Internal Server Error', 
+      errMessage: err.message
+    });
+  }
 });
 
 

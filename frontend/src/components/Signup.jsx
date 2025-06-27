@@ -1,167 +1,73 @@
+import '../stylesheets/Login.css';
 import { useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import '../stylesheets/Login.css';
 import toast from "react-hot-toast";
+
+import userSignupHook from "../hooks/userSignupHook";
+
 
 const Signup = () => {
 
-  // Use State Variables
+  // Objects 
+  const navigate = useNavigate();
+
+  // States
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
 
-  // For OTP screen
   const [isOtp, setIsOtp] = useState(false);
   const [otp, setOtp] = useState(null);
 
-  const navigate = useNavigate();
+  // Refs
   const authInfo = useRef();
 
-  // When Signup button is Clicked
-  const handleSignUp = () => {
 
-    // if Input fields are ok
-    if(email!='' && password!='' && confirmPassword!='' && name!='' && password===confirmPassword){
-      
-      // Check if email already in use
-      fetch(`${import.meta.env.VITE_API_URL}/varifyemail`, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email
-        })
-      })
-      .then(response => response.json())
-      .then((data) => {
-        if(data.code==200){
-          if(!isOtp){
+  // Functions for Signup Hook
+  const {checkEmail, sendOtp, varifyOtp, addUser} = userSignupHook();
 
-        // Sent Otp
-        fetch(`${import.meta.env.VITE_API_URL}/requestotp`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: email,
-          })
-        })
-        .then(response => response.json())
-        .then((data) => {
-          if(data.code==200){
-            toast.success(data.message);
-          }
-          else{
-            toast.error(data.message);
-          }
-        })
-
+  // Handle signup button click
+  const handleSignUp = async () => {
+    
+    if(email && password && confirmPassword && name && password === confirmPassword){
+      try{
+        await checkEmail(email);
         setIsOtp(true);
+        await sendOtp(email);
+
+      } catch (_) {
+        setIsOtp(false);
       }
-        }
-        else{
-          toast.error(data.message);
-        }
-      })
-      
-
     }
+    else{
+      if(!email) { toast.error("Provide a valid Email") }
+      else if (!password) { toast.error("Enter your Password") }
+      else if (!name) { toast.error("Enter your Name") }
+      else if (password !== confirmPassword) { toast.error("Password does not match") }
+    }
+  }
 
-    // if some fields are not ok
+  // Handle Otp Button Click
+  const handleOtpBtn = async () => {
+
+    if(otp) {
+      try{
+        await varifyOtp(otp, email);
+        await addUser(email, password, name);
+        setIsOtp(false);
+        navigate('/auth');
+
+      } catch (_) {  }
+    }
     else {
-      if(email==''){
-        toast('Please Provide a valid Email', {
-          icon: '⚠️',
-        });
-      }
-      else if(password==''){
-        toast('Please Provide a valid password', {
-          icon: '⚠️',
-        });
-      }
-      else if(confirmPassword==''){
-        toast('Please Provide same confirm password', {
-          icon: '⚠️',
-        });
-      }
-      else if(name==''){
-        toast('Please Provide a valid name', {
-          icon: '⚠️',
-        });
-      }
-      else if(password!=confirmPassword){
-        toast('Both Password Must be Same', {
-          icon: '⚠️',
-        });
-      }
+      toast.error("Enter your OTP");
     }
-  };
-
-  // if Otp button is clicked
-  const handleOtpBtn = () => {
-    fetch(`${import.meta.env.VITE_API_URL}/varifyotp`,{
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        OTP: otp,
-        email: email
-      })
-    })
-    .then(response => response.json())
-    .then((data) => {
-      if(data.code==200){
-        toast.success(data.message);
-
-        // Save user to Database
-        
-        fetch(`${import.meta.env.VITE_API_URL}/adduser`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: email,
-            password: password,
-            name: name,
-          }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            // console.log(data);
-
-            if (data.code == 200) {
-              // console.log(data);
-              toast.success(data.message);
-              navigate("/auth");
-
-            } else {
-              // authInfo.current.innerText = data.message;
-              // console.log(data.message);
-              toast.error(data.message);
-            }
-          })
-          .catch((err) => {
-            // console.log(err);
-            toast.err(err.message);
-          });
-
-        
-      }
-      else{
-        toast.error(data.message);
-      }
-    })
   }
 
 
   // Signup Screen
   if(!isOtp){
-
       return (
         <div className="auth-main">
           <h3 id="auth-heading">Signup Here</h3>
@@ -209,10 +115,9 @@ const Signup = () => {
 
   }
 
-  // Otp Screen
-  else{
 
-    return(
+  // Otp Screen
+  return(
       <div className='auth-main'>
         <p>Varify OTP</p>
         <input 
@@ -222,11 +127,8 @@ const Signup = () => {
           ></input>
         <button onClick={handleOtpBtn}>Varify</button>
     </div>
-
     );
-
-  }
-  
+    
 };
 
 export default Signup;

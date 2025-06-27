@@ -1,102 +1,73 @@
-import React from 'react';
-import Note from '../components/Note';
+import '../stylesheets/Profile.css';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import '../stylesheets/Profile.css';
 import { Link } from 'react-router-dom';
-import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
+
+import Note from '../components/Note';
+import getNoteHook from '../hooks/getNoteHook';
+
 
 const Profile = () => {
+
   const [notes, setNotes] = useState([]);
-  const userid = useSelector(store => store.user.userid);
+
+  const getNotes = getNoteHook();
+
+  // Store items
   const userName = useSelector(store => store.user.userName);
+  const userid = useSelector(store => store.user.userid);
   const islogged = useSelector(store => store.user.islogged);
 
-  const navigate = useNavigate();
-
+  
+  // By default fetch all Notes
   useEffect(() => {
-
-    fetch(`${import.meta.env.VITE_API_URL}/getnote`,{
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        userid: userid
-      }),
-    })
-    .then(response => response.json())
-    .then((data) => {
-
-      if(data.code==200){
-
-        // console.log(data);
-        setNotes(data.notes);
+    try{
+      const fetchAllNote = async () => {
+        if(userid && islogged){
+          const {res, data} = await getNotes(userid);
+          setNotes(data.notes);
+        }
       }
-
-      else{
-        // console.log(`Something went wrong`, data);
-        toast.err(data.message)
-      }
-
-
-    })
-    .catch((err) => {
-      // console.log(err);
-      toast.err(err.message);
-    });
+      fetchAllNote();
+    } catch (_) { }
 
   }, []);
-
-  
     
 
-  if(!islogged){
+  // if user is not logged
+  if( !islogged ){
     return (
       <>
-       <p>Please login first</p>
+      <div className='profile-main'>
+        <p>Please login first</p>
+      </div>
       </>
     )
   }
 
-  else if(notes.length<1){
-    
-    return (
-      <>
-        <div className='profile-main'>
-          <div className='profile-top-container'>
-            <h2 className='profile-heading'>Welcome <span>{userName || 'loading..'}</span></h2>
-            <Link to='/create'><button id='profile-create-note'>+</button></Link>
-          </div>
-        <p>No Notes are crated</p> 
-        </div>
-    </>
-    )
-  }
-  else{
-    
-    return (
+  // if user is logged
+  return (
       <div className='profile-main'>
         <div className='profile-top-container'>
           <h2 className='profile-heading'>Welcome <span>{userName || 'loading..'}</span></h2>
           <Link to='/create'><button id='profile-create-note'>+</button></Link>
         </div>
 
-
         <div className='profile-note-section'>
-          {notes.map((note, index) => (
-            <Note 
-              key={index} 
-              note={note} 
+          {notes.length<1?
+            <p>No Notes are crated</p> 
+            :
+            notes.map((note, index) => (
+              <Note 
+                key={index} 
+                note={note} 
               />
-          ))}
+            ))
+          }
         </div>
         
       </div>
-    )
-  }
-
+    );
 
 }
 
