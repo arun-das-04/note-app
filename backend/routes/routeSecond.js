@@ -163,5 +163,63 @@ route.post('/checkemail', async (req, res) => {
 });
 
 
+route.delete('/deletenote', async (req, res) => {
+
+  try{
+    const {noteid} = req.body;
+
+    if(!noteid) {
+      return res.status(404).json({ok: false, message: "noteid is required"});
+    }
+    const deleteNote = await Note.findByIdAndDelete(noteid);
+    if(!deleteNote) {
+      return res.status(400).json({ok: false, message: "Failed to delete note"});
+    }
+
+    res.status(200).json({
+      ok: true,
+      message: "Note is deleted successfully",
+      noteid: noteid,
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      message: "Internal Server Error",
+      errMessage: err.message,
+    });
+  }
+});
+
+
+route.patch('/changepassword', async (req, res) => {
+
+  try{
+    const {userid, password, newPassword} = req.body;
+    if(!userid || !password || !newPassword) {
+      return res.status(400).json({ok: false, message: "Data is missing"});
+    }
+    const updatePassword = await User.findOneAndUpdate({_id: userid, password: password}, {$set:{password: newPassword}});
+    if(!updatePassword){
+      return res.status(404).json({ok: false, message: "Invalid Credential"});
+    }
+
+    res.status(200).json({
+      ok: true,
+      message: "Password is Updated",
+      userData: {userid: userid, email: updatePassword.email}
+    });
+
+
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      message: "Internal Server Error",
+      errMessage: err,
+    })
+
+  }
+});
+
 
 export default route;

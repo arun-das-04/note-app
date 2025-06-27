@@ -97,11 +97,11 @@ route.post('/createnote', async (req, res) => {
     const newNote = new Note({title, content, userid});
     await newNote.save();
 
-    const { _id, createdAt } = newNote;
+    const { _id, createdAt, updatedAt } = newNote;
     res.status(200).json({
       ok: true,
-      message: 'Note successfully added', 
-      userNote: {_id, title, content, createdAt}
+      message: 'Note is saved', 
+      userNote: {_id, title, content, createdAt, updatedAt}
     });
 
   } catch (err) {
@@ -123,7 +123,7 @@ route.post('/createnote', async (req, res) => {
       return res.status(404).json({ ok: false, message: 'User ID is required'});
     }
 
-    const notes = await Note.find({userid: userid});
+    const notes = await Note.find({userid: userid}).sort({updatedAt:-1});
 
     res.status(200).json({
       ok: true,

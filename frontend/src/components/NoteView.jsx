@@ -51,7 +51,7 @@ const NoteView = () => {
   // Back Button Click
   const handleBackBtn = () => {
     dispatch(exitNote());
-    navigate(-1);
+    navigate('/profile');
   }
 
   // Edit button Click
@@ -127,6 +127,7 @@ if(isNoteOpened){
             // Title for Edit Mode
             <input 
               id='viewnote-title' 
+              placeholder = 'Add Title'
               defaultValue={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
             />
@@ -145,6 +146,7 @@ if(isNoteOpened){
             // Content for Edit Mode
             <textarea 
               id='viewnote-content' 
+              placeholder = 'Add Your Note'
               defaultValue={newContent}
               ref={editTextArea}
               onChange={(e) => setNewContent(e.target.value)}

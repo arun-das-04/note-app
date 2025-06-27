@@ -13,7 +13,7 @@ const createNoteHook = () => {
         return data;
       }
       else{
-        toast.success(data.messaage, {id: toastCreateNote});
+        toast.success(data.message || "Note is saved", {id: toastCreateNote});
         return data;
       }
       

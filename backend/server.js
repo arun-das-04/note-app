@@ -21,6 +21,6 @@ app.use('/', route);
 
 
 // listen server
-app.listen(process.env.PORT || 3001, () => {
+app.listen(process.env.PORT || 3001, '0.0.0.0', () => {
   console.log(`Server is started on http://localhost:3001`);
 });
