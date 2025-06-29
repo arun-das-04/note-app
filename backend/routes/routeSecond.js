@@ -46,16 +46,21 @@ route.patch('/editnote', async (req, res) => {
       return res.status(404).json({ ok: false, message: 'Note ID is required' });
     }
 
-    const updateNote = await Note.findOneAndUpdate({_id: noteid}, {$set:{title: newTitle, content: newContent}});
+    const updatedNote = await Note.findOneAndUpdate({_id: noteid}, {$set:{title: newTitle, content: newContent}}, {new: true});
 
-    if(!updateNote){
+    if(!updatedNote){
       return res.status(400).json({ ok: false, messsage: 'Note is failed to update' });
     }
 
     res.status(200).json({
       ok: true,
       message: 'Note is updated',
-      noteid: noteid
+      userNote: {
+        _id: noteid, 
+        title: updatedNote.title, 
+        content: updatedNote.content, 
+        updatedAt: updatedNote.updatedAt
+      }
     });
 
   } catch(err) {
@@ -166,12 +171,12 @@ route.post('/checkemail', async (req, res) => {
 route.delete('/deletenote', async (req, res) => {
 
   try{
-    const {noteid} = req.body;
+    const {noteid, userid} = req.body;
 
-    if(!noteid) {
-      return res.status(404).json({ok: false, message: "noteid is required"});
+    if(!noteid || !userid) {
+      return res.status(404).json({ok: false, message: "noteid and userid is required"});
     }
-    const deleteNote = await Note.findByIdAndDelete(noteid);
+    const deleteNote = await Note.findOneAndDelete({_id: noteid, userid: userid});
     if(!deleteNote) {
       return res.status(400).json({ok: false, message: "Failed to delete note"});
     }
@@ -180,6 +185,7 @@ route.delete('/deletenote', async (req, res) => {
       ok: true,
       message: "Note is deleted successfully",
       noteid: noteid,
+      userid: userid
     });
 
   } catch (err) {

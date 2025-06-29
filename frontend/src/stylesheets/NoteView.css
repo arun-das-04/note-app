@@ -28,18 +28,28 @@
     background-color: rgba(107, 105, 105, 0.262);
 }
 
-#viewnote-edit-btn{
+.viewnote-right-buttons{
+  display: flex;
+  gap: 10px;
+}
+
+
+#viewnote-edit-btn,
+#viewnote-delete-btn{
   height: 40px;
-  width: 40px;
+  width: auto;
+  min-width: 40px;
   background-color: rgba(138, 132, 132, 0.332);
   border: 0;
   border-radius: 7px;
+  padding: 10px;
   color: white;
-  font-size: 17px;
+  font-size: 16px;
   cursor: pointer;
 }
 
-#viewnote-edit-btn:hover{
+#viewnote-edit-btn:hover,
+#viewnote-delete-btn:hover{
     background-color: rgba(107, 105, 105, 0.262);
 }
 

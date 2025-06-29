@@ -33,6 +33,23 @@
   transition: 0.2s ease-in;
 }
 
+.nav-profile-section{
+  max-height: 35px;
+  max-width: 35px;
+  border-radius: 50%;
+}
+
+#nav-profile-image{
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+}
+
+#nav-profile-image:hover{
+  filter: opacity(0.6);
+
+}
+
 #nav-login-btn{
   width: 70px;
   height: 35px;
@@ -52,4 +69,37 @@
 
 .nav-link{
   all: unset;
+}
+
+
+
+.profile-buttons{
+  width: auto;
+  height: auto;
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  position: absolute;
+  right: 5px;
+  top: 65px;
+}
+
+
+#profile-logout-btn,
+#profile-setting-btn{
+  border: 0;
+  height: 40px;
+  min-width: 60px;
+  max-width: 80px;
+  padding: 5px;
+  background-color: black;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 13px;
+
 }

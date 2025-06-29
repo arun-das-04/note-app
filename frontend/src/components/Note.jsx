@@ -21,7 +21,9 @@ const Note = (props) => {
       isNoteOpened: true,
     }));
 
-    navigate('/viewnote');
+    navigate('/viewnote', {
+      state: {for: 'view'}
+    });
   }
 
 

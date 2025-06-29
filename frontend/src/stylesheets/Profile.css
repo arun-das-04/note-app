@@ -21,10 +21,6 @@
 
 }
 
-.profile-note-section{
-  display: flex;
-  flex-direction: column;
-}
 
 #profile-create-note{
   width: 45px;
@@ -36,4 +32,19 @@
   color: white;
   cursor: pointer;
 
+}
+
+#profile-search-note{
+  width: 100%;
+  height: 40px;
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 15px;
+  margin-bottom: 20px;
+
+}
+
+.profile-note-section{
+  display: flex;
+  flex-direction: column;
 }
