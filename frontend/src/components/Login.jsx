@@ -1,5 +1,5 @@
 import "../stylesheets/Login.css";
-import { useState} from "react";
+import { useEffect, useRef, useState} from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
@@ -7,6 +7,8 @@ import { setUser } from "../store/slices/userSlice.js";
 import userLoginHook from "../hooks/userLoginHook";
 import toast from "react-hot-toast";
 
+import { FaRegEye } from "react-icons/fa6";
+import { FaRegEyeSlash } from "react-icons/fa6";
 
 const Login = () => {
 
@@ -16,8 +18,9 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const userLogin = userLoginHook();
+  const [showPassword, setShowPassword] = useState(false);
 
+  const userLogin = userLoginHook();
 
   // handle Login Btn Click
   const handleAuthBtn = async () => {
@@ -33,7 +36,7 @@ const Login = () => {
           }));
 
           setTimeout(() => {
-            navigate('/profile');
+            navigate('/notes');
           }, 1000)
         }
     }
@@ -56,12 +59,15 @@ const Login = () => {
           onChange={(e) => setEmail(e.target.value)}
         />
 
+        <div className='auth-password-section'>
         <input
           placeholder="Enter your password"
-          type="password"
+          type={showPassword? 'text' : 'password'}
           className="auth-input"
           onChange={(e) => setPassword(e.target.value)}
         />
+        <button id='password-action-btn' onClick={() => setShowPassword(!showPassword)}>{showPassword? <FaRegEyeSlash/> : <FaRegEye/>}</button>
+        </div>
 
         <button id="auth-btn" onClick={handleAuthBtn}>
           Submit

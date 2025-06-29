@@ -8,3 +8,14 @@
   font-family: 'Open Sans', sans-serif, Arial, Helvetica;
   transition: 200ms all ease-in-out;
 }
+
+
+/* Remove Spinner for number input */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}

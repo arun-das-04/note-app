@@ -1,15 +1,18 @@
 import '../stylesheets/Profile.css';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 import Note from '../components/Note';
 import getNoteHook from '../hooks/getNoteHook';
+import { useNavigate } from 'react-router-dom';
 
 
 const Profile = () => {
 
+  const navigate = useNavigate();
+
   const [notes, setNotes] = useState([]);
+  const [searchNote, setSearchNote] = useState('');
 
   const getNotes = getNoteHook();
 
@@ -18,7 +21,16 @@ const Profile = () => {
   const userid = useSelector(store => store.user.userid);
   const islogged = useSelector(store => store.user.islogged);
 
+  const handleCreateBtn = () => {
+    navigate('/viewnote', {
+      state : {for: 'create'}
+    });
+  }
   
+  // Filter note based on seach - for empty search all notes will be shown
+  const filterNotes = notes.filter(note => 
+    note.title.toLowerCase().includes(searchNote.toLowerCase()));
+
   // By default fetch all Notes
   useEffect(() => {
       const fetchAllNote = async () => {
@@ -29,6 +41,7 @@ const Profile = () => {
       }
       fetchAllNote();
   }, [userid]);
+
     
 
   // if user is not logged
@@ -47,14 +60,16 @@ const Profile = () => {
       <div className='profile-main'>
         <div className='profile-top-container'>
           <h2 className='profile-heading'>Welcome <span>{userName || 'loading..'}</span></h2>
-          <Link to='/create'><button id='profile-create-note'>+</button></Link>
+          <button id='profile-create-note' onClick={handleCreateBtn}>+</button>
         </div>
 
+        <input placeholder='Seach Notes' id='profile-search-note' onChange={(e) => setSearchNote(e.target.value)}></input>
+
         <div className='profile-note-section'>
-          {notes?.length<1?
+          {filterNotes?.length<1?
             <p>No Notes are crated</p> 
             :
-            notes?.map((note, index) => (
+            filterNotes?.map((note, index) => (
               <Note 
                 key={index} 
                 note={note} 

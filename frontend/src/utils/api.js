@@ -114,6 +114,21 @@ export const fetchEditNote = async (noteid, newTitle, newContent) => {
 
 
 
+// Delete Note
+export const fetchDeleteNote = async (noteid, userid) => {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/deletenote`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ noteid, userid }),
+  });
+
+  const data = await res.json();
+  return {res, data}
+}
+
+
+
+
 
 
 

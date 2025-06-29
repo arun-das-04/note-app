@@ -18,12 +18,45 @@
   height: 40px;
   width: 100%;
   border-bottom: 2px solid rgb(26, 178, 239);
-  padding:10px;
+  padding: 5px 35px 5px 5px;
 }
 
-#auth-info{
-  font-size: 14px;
-  color: red;
+.auth-password-section {
+  width: 100%;
+  display: flex;
+  position: relative;
+}
+
+#password-action-btn{
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translate(0, -50%);
+  background: transparent;
+  border: 0;
+  font-size: 18px;
+}
+
+.auth-otp-section{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+
+
+}
+
+.auth-otp-input{
+  border-radius: 10px;
+  border:1px solid black;
+  width: 40px;
+  height: 40px;
+  caret-color: transparent;
+  text-align: center;
+  font-size: 25px;
+}
+
+.auth-otp-input:focus{
+  border-bottom:2px solid blue ;
 }
 
 #auth-btn{
