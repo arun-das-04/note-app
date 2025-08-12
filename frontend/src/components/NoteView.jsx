@@ -241,7 +241,7 @@ const NoteView = () => {
             :
 
             // Content for Edit Mode
-            <textarea 
+            <textarea
               id='viewnote-content' 
               placeholder = 'Add Your Note'
               value={newContent}

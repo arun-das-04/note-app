@@ -1,12 +1,14 @@
 .note-container{
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  max-height:250px;
+  max-height:200px;
   background-color: #171717;
   border: 1px solid rgb(62, 62, 62);
   padding: 10px;
   border-radius: 15px;
   word-break: break-all;
+
 
 }
 
