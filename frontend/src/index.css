@@ -20,3 +20,22 @@ input[type="number"]::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
+
+::-webkit-scrollbar{
+  position: absolute;
+  z-index:100;
+  width: 7px;
+}
+::-webkit-scrollbar-thumb{
+  background: rgb(67, 67, 67);
+  border-radius: 5px;
+}
+::-webkit-scrollbar-track{
+  background:rgba(198, 198, 198, 0.085);
+}
+
+
+body{
+  background-color: #171717;
+}
