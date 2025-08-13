@@ -1,9 +1,22 @@
+
+#profile-background-image{
+    position: absolute;
+    filter: blur(90px) brightness(0.2) hue-rotate(75deg);
+    top: -40%;
+    left:50%;
+    height:400px;
+    transform: translate(-50%, 0%);
+    
+
+}
+
 .profile-main{
   display: flex;
   flex-direction: column;
   padding: 20px;
   background-color: #171717;
   color: white;
+  user-select: none;
 }
 
 .profile-top-container{
@@ -21,7 +34,7 @@
 }
 
 .profile-heading span{
-  color: rgb(18, 113, 190);
+  color: #e85858;
 
 }
 
@@ -30,7 +43,7 @@
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  border: 1px solid rgb(62, 62, 62);
+  border: 1px solid rgb(75, 75, 75);
   font-size: 30px;
   background-color: #171717;
   color: rgb(255, 255, 255);
@@ -42,8 +55,8 @@
   width: 100%;
   height: 40px;
   padding: 10px;
-  border: 1px solid rgb(62, 62, 62);
-  background-color: #171717;
+  background-color: #ffffff05;
+  border: 1px solid rgba(207, 206, 206, 0.058);
   color: rgb(220, 218, 218);
   border-radius: 15px;
   margin-bottom: 20px;

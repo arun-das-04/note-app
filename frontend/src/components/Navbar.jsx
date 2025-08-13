@@ -5,6 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../store/slices/userSlice';
 import UserImage from '../assets/user.png';
+import Logo from '../assets/logo.png';
+import Logout from '../assets/user-logout.svg';
+import Settings from '../assets/settings.svg';
 import toast from 'react-hot-toast';
 
 
@@ -61,20 +64,31 @@ const Navbar = () => {
   return (
     <>
       <div className='navbar-main'>
-        <p id='nav-heading'>Notes</p>
-        <div className='nav-items'>
-        </div>
-        <div className='nav-profile-section' ref={navprofile}>
-          <img src={UserImage} id='nav-profile-image' onClick={() => {setIsProfileBtn(!isProfileBtn)}}></img>
-          {isProfileBtn && (
-            <div className='profile-buttons'>
-              <button id='profile-logout-btn' onClick={handleLogoutBtn}>Logout</button>
-              <button id='profile-setting-btn' onClick ={() => {navigate('/setting'); setIsProfileBtn(false)}}>Setting</button>
-            </div>
-          )}
+        <div className='nav-head'>
+          <img src={Logo} id='nav-logo'></img>
+          <p id='nav-heading'>Notes</p>
           
-          {/* <button id='nav-login-btn' onClick={handelNavBtn}>{islogged? 'logout' : 'login'}</button> */}
         </div>
+        
+        <div className='nav-items'>
+          <img src={Settings} id='nav-settings-icon' onClick ={() => {navigate('/setting')}}></img>
+          <img src={Logout} id='nav-logout-icon' onClick={handleLogoutBtn}></img>
+          
+          
+        </div>
+
+          {/* <div className='nav-profile-section' ref={navprofile}>
+            <img src={UserImage} id='nav-profile-image' onClick={() => {setIsProfileBtn(!isProfileBtn)}}></img>
+            {isProfileBtn && (
+              <div className='profile-buttons'>
+                <button id='profile-logout-btn' onClick={handleLogoutBtn}>Logout</button>
+                <button id='profile-setting-btn' onClick ={() => {navigate('/setting'); setIsProfileBtn(false)}}>Setting</button>
+              </div>
+            )}
+          </div> */}
+
+          {/* <button id='nav-login-btn' onClick={handelNavBtn}>{islogged? 'logout' : 'login'}</button> */}
+        
         
       </div>
 

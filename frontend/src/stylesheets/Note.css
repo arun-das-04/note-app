@@ -3,11 +3,12 @@
   display: flex;
   flex-direction: column;
   max-height:200px;
-  background-color: #171717;
-  border: 1px solid rgb(62, 62, 62);
+  background-color: #ffffff05;
+  border: 1px solid rgba(207, 206, 206, 0.058);
   padding: 10px;
   border-radius: 15px;
   word-break: break-all;
+  cursor: pointer;
 
 
 }
