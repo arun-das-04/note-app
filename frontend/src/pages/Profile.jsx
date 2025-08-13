@@ -27,9 +27,9 @@ const Profile = () => {
     });
   }
   
-  // Filter note based on seach - for empty search all notes will be shown
+  // Filter note based on search - for empty search all notes will be shown
   const filterNotes = notes.filter(note => 
-    note.title.toLowerCase().includes(searchNote.toLowerCase()));
+    note?.title?.toLowerCase().includes(searchNote.toLowerCase()));
 
   // By default fetch all Notes
   useEffect(() => {
@@ -63,19 +63,38 @@ const Profile = () => {
           <button id='profile-create-note' onClick={handleCreateBtn}>+</button>
         </div>
 
-        <input placeholder='Seach Notes' id='profile-search-note' onChange={(e) => setSearchNote(e.target.value)}></input>
+        <input placeholder='Search Notes...' id='profile-search-note' onChange={(e) => setSearchNote(e.target.value)}></input>
 
         <div className='profile-note-section'>
-          {filterNotes?.length<1?
-            <p>No Notes are crated</p> 
+
+          {/* {if no note is present} */}
+          {notes?.length<1?
+            <>
+              <p>No Notes are created</p>
+            </>
             :
-            filterNotes?.map((note, index) => (
-              <Note 
-                key={index} 
-                note={note} 
-              />
-            ))
+            // {if note presnet}
+            <> 
+            {/* {if users enters something in search} */}
+              {searchNote?
+                filterNotes?.map((note, index) => (
+                  <Note 
+                    key={index} 
+                    note={note} 
+                  />
+                ))
+                :
+                // {if search is empty}
+                notes?.map((note, index) => (
+                  <Note 
+                    key={index} 
+                    note={note} 
+                  />
+                )) 
+              }
+            </>
           }
+
         </div>
         
       </div>

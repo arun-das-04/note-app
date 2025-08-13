@@ -11,7 +11,7 @@ route.patch('/editemail', async (req, res) => {
   try{
     const { userid , newEmail } = req.body;
 
-    if( !userid || !newEmail ) {
+    if( !userid || !newEmail) {
       return res.status(404).json({ok: false,  message: 'Data is missing'});
     }
     

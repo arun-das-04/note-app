@@ -128,6 +128,7 @@ const NoteView = () => {
                     noteTime: data.userNote?.updatedAt,
                     isNoteOpened: true,
                   }));
+                  setIsEdit(false);
               }
             }
           }
@@ -162,15 +163,16 @@ const NoteView = () => {
     const textarea = editContent.current;
     if (textarea) {
       textarea.style.height = 'auto'; // Reset height to shrink if needed
-      const newHeight = Math.min(Math.max(textarea.scrollHeight, 100), 800);
+      const newHeight = Math.min(Math.max(textarea.scrollHeight, 100));
       textarea.style.height = `${newHeight}px`;
     }
+
   };
   
   // run resize method on content change
   useEffect(() => {
     resizeTextarea();
-  }, [newContent]);
+  }, [newContent, isEdit]);
 
 
   // Settting the cursor at the end of the content text in edit mode
@@ -241,7 +243,7 @@ const NoteView = () => {
             :
 
             // Content for Edit Mode
-            <textarea 
+            <textarea
               id='viewnote-content' 
               placeholder = 'Add Your Note'
               value={newContent}

@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 
 import userSignupHook from "../hooks/userSignupHook";
 
+import { IoIosArrowBack } from "react-icons/io";
 import { FaRegEye } from "react-icons/fa6";
 import { FaRegEyeSlash } from "react-icons/fa6";
 
@@ -114,55 +115,83 @@ const Signup = () => {
   if(!isOtp){
       return (
         <div className="auth-main">
-          <h3 id="auth-heading">Signup Here</h3>
-          <input
-            placeholder="Enter Your Email"
-            type="email"
-            className="auth-input"
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-          />
 
-          <div className='auth-password-section'>
-            <input
-              placeholder="Enter Your password"
-              type={showPassword? 'text' : 'password'}
-              className="auth-input"
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
-            />
-            <button 
-              id='password-action-btn'
-              onClick={() => setShowPassword(!showPassword)}>{showPassword? <FaRegEyeSlash/> : <FaRegEye/>}</button>
+          <button className='auth-back-btn'><IoIosArrowBack/></button>
+
+          <div className='auth-headings'>
+          <h3 className="auth-main-heading">Create Account</h3>
+          <p className='auth-sub-heading'>Fit your information bellow and register<br/> to your note account</p>
           </div>
 
-          <div className='auth-password-section'>
+          <div className='auth-input-section'>
+            <label className='auth-label'>Name</label>
             <input
-              placeholder="Enter Confirm password"
-              type={showConfirmPassword? 'text' : 'password'}
+              placeholder="Enter Your Name"
+              type="text"
               className="auth-input"
               onChange={(e) => {
-                setConfirmPassword(e.target.value);
+                setName(e.target.value);
               }}
             />
-            <button 
-              id='password-action-btn'
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}>{showConfirmPassword? <FaRegEyeSlash/> : <FaRegEye/>}</button>
           </div>
 
-          <input
-            placeholder="Enter Your Name"
-            type="text"
-            className="auth-input"
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
-          />
+          <div className='auth-input-section'>
+            <label className='auth-label'>Email</label>
+            <input
+              placeholder="Enter Your Email"
+              type="email"
+              className="auth-input"
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+            />
+          </div>
+          
+          <div className='auth-input-section'>
+            <label className='auth-label'>Password</label>
+            <div className='auth-password-section'>
+              <input
+                placeholder="Enter Your password"
+                type={showPassword? 'text' : 'password'}
+                className="auth-input"
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+              />
+              <button 
+                className='password-action-btn'
+                onClick={() => setShowPassword(!showPassword)}>{showPassword? <FaRegEyeSlash/> : <FaRegEye/>}</button>
+            </div>
+          </div>
 
-          <button id="auth-btn" onClick={handleSignUp}> Sign Up </button>
-          <p className='auth-create'>Already have an Account? <Link to="/auth"><span>Login here</span></Link></p>
+
+          <div className='auth-input-section'>
+            <label className='auth-label'>Confirm Password</label>
+            <div className='auth-password-section'>
+              <input
+                placeholder="Enter Confirm password"
+                type={showConfirmPassword? 'text' : 'password'}
+                className="auth-input"
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                }}
+              />
+              <button 
+                className='password-action-btn'
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}>{showConfirmPassword? <FaRegEyeSlash/> : <FaRegEye/>}</button>
+            </div>
+          </div>
+
+          <div className='auth-input-terms'>
+            <input
+              className='auth-input-checkbox'
+              type='checkbox'
+            />
+            <label className='auth-label auth-terms'>Agree with <span>Terms & Condition</span></label>
+          </div>
+
+          <button className="auth-btn" onClick={handleSignUp}> Sign Up </button>
+          <p className='auth-transport'>Already have an Account? <Link to="/auth"><span>Sign in</span></Link></p>
         </div>
     );
 

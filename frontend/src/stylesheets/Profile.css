@@ -1,10 +1,26 @@
+
+#profile-background-image{
+    position: absolute;
+    filter: blur(90px) brightness(0.2) hue-rotate(75deg);
+    top: -40%;
+    left:50%;
+    height:400px;
+    transform: translate(-50%, 0%);
+    
+
+}
+
 .profile-main{
   display: flex;
   flex-direction: column;
-  padding: 30px;
+  padding: 20px;
+  background-color: #171717;
+  color: white;
+  user-select: none;
 }
 
 .profile-top-container{
+  margin-top: 60px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -14,10 +30,11 @@
 
 .profile-heading{
   font-size: 25px;
+  color: white;
 }
 
 .profile-heading span{
-  color: rgb(18, 113, 190);
+  color: #e85858;
 
 }
 
@@ -26,10 +43,10 @@
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  border: 0;
+  border: 1px solid rgb(75, 75, 75);
   font-size: 30px;
-  background-color: rgb(51, 230, 81);
-  color: white;
+  background-color: #171717;
+  color: rgb(255, 255, 255);
   cursor: pointer;
 
 }
@@ -38,13 +55,38 @@
   width: 100%;
   height: 40px;
   padding: 10px;
-  border: 1px solid black;
+  background-color: #ffffff05;
+  border: 1px solid rgba(207, 206, 206, 0.058);
+  color: rgb(220, 218, 218);
   border-radius: 15px;
   margin-bottom: 20px;
 
 }
 
+#profile-search-note::placeholder{
+  color: rgb(207, 204, 204);
+}
+
 .profile-note-section{
-  display: flex;
-  flex-direction: column;
+  background-color: #171717;
+  width: 100%;
+  height: 100%;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:10px;
+}
+
+@media(min-width:900px){
+  .profile-note-section{
+    grid-template-columns: repeat(3, 1fr);
+    gap:10px;
+  }
+}
+
+@media(min-width:1400px){
+  .profile-note-section{
+    grid-template-columns: repeat(4, 1fr);
+    gap:10px;
+  }
 }
